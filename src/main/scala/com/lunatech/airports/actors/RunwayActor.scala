@@ -31,7 +31,9 @@ class RunwayActor extends Actor with ActorLogging {
         runwayMap <- runwaysStream.map(_.groupBy(_.airportIdent))
         airportMap <- airportsStream.map(_.map(airport => (airport.isoCountry, runwayMap.getOrElse(airport.ident, List()))).groupBy(_._1))
         countryList <- countryStream.map(_.map(country => CountryRunwayTypes(country.name, airportMap.getOrElse(country.code, List())
-          .flatMap(_._2).groupBy(_.surface.getOrElse("unknown")).toList.map(grpAirport => RunwayTypeCount(grpAirport._1, grpAirport._2.size)).sortBy(_.count)(scala.Ordering.Int.reverse))))
+          .flatMap(_._2).groupBy(_.surface.getOrElse("unknown")).toList
+          .map(grpAirport => RunwayTypeCount(grpAirport._1, grpAirport._2.size))
+          .sortBy(_.count)(scala.Ordering.Int.reverse))))
       } yield countryList.sortBy(_.countryName)) pipeTo sender()
 
   }

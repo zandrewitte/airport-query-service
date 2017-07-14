@@ -29,7 +29,7 @@ class TestRunner extends AsyncFlatSpec with Matchers with BeforeAndAfterAll {
     )
   }
 
-  "The Runway Actor " should " return a list of runway for the corresponding Airport Indentifier " in {
+  "The Runway Actor " should " return a list of runway for the corresponding Airport Identifier " in {
     (runwayActor ? GetRunwaysByAirport("00CO")).mapTo[List[Runway]].map(runwayList =>
       assert(runwayList.forall(_.airportIdent === "00CO"))
     )

@@ -27,7 +27,6 @@ class CountryActor extends Actor with ActorLogging {
             .sortWith((country1, country2) => editDist(country1.name, query) < editDist(country2.name, query)).headOption
         )
       ) pipeTo sender()
-    case _ =>
   }
 
   def editDist[A](a: Iterable[A], b: Iterable[A]): Int =
