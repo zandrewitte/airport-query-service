@@ -3,6 +3,7 @@ package com.lunatech.airports
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.server.Directives._
+import com.lunatech.airports.IngestStreams.runways
 import com.lunatech.airports.routes._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -10,8 +11,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Created by zandrewitte on 2017/07/05.
   * AirportsService
   */
-object AirportsService extends App{
+object AirportsService extends App {
   import com.lunatech.airports.messagespec.Implicits._
+
+  IngestStreams.read()
 
   val routes = pathPrefix("airport-api" / "v1") { respondWithHeaders(
     RawHeader("Access-Control-Allow-Origin", "http://localhost:8081"),

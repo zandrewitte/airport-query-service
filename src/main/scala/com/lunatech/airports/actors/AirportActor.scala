@@ -1,43 +1,36 @@
 package com.lunatech.airports.actors
 
 import akka.actor.{Actor, ActorLogging}
-import akka.pattern.pipe
-import com.lunatech.airports.CsvFileStreams._
 import com.lunatech.airports.messagespec._
-
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import scalaz._
-import Scalaz._
-
+import com.lunatech.airports.messagespec.Implicits._
+import com.lunatech.airports.IngestStreams._
+import org.apache.spark.sql.functions._
 /**
   * Created by zandrewitte on 2017/07/12.
   * AirportActor
   */
 class AirportActor extends Actor with ActorLogging {
+  import spark.implicits._
 
   def receive: Receive = {
     case GetAirportsByCountry(countryCode) =>
       log.info(s"Finding Airports for Country: $countryCode")
-      airportsStream.map(_.filter(_.isoCountry === countryCode)) pipeTo sender()
+      sender() ! airports.filter($"iso_country" === countryCode).toJSON.collect().toVector
+
     case GetAirportsByCountries() =>
       log.info(s"Finding Top/Bottom 10 Countries")
-      airportsStream.flatMap(airports => {
-        val airportCount = airports.groupBy(_.isoCountry)
-            .map{case (countryCode, countryAirports) => CountryAirport(countryCode, countryAirports.size)}
-            .toList.sortBy(_.airportCount)(scala.Ordering.Int.reverse)
 
-        val countryAirportList = airportCount.take(10) ::: airportCount.takeRight(10)
-        val countryCodeList =  countryAirportList.map(_.countryCode)
+      val grouped = airports.select($"name", $"iso_country")
+        .as('airport)
+        .join(countries.as('country), $"airport.iso_country" === $"country.code")
+        .groupBy($"country.name")
+        .count()
+        .cache()
 
-        countryStream.map{countryList =>
-          val countryNames = countryList.filter(country => countryCodeList.contains(country.code)).groupBy(_.code)
-          val topAirports = countryAirportList.map(countryAirport => CountryAirport(countryNames(countryAirport.countryCode).head.name, countryAirport.airportCount))
-
-          CountryAirportSummary(topAirports.take(10), topAirports.takeRight(10))
-        }
-
-      }) pipeTo sender()
+      sender() ! s"""{
+         |"topAirportCountries": [${grouped.sort(desc("count")).limit(10).toJSON.cache().collect().toVector.mkString(",")}],
+         |"bottomAirportCountries": [${grouped.sort(asc("count")).limit(10).toJSON.cache().collect().toVector.mkString(",")}]
+       }""".stripMargin
 
   }
 

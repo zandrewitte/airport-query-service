@@ -24,16 +24,16 @@ object RunwayRoutes {
     pathPrefix("runways" / "reports") {
       path("surfaceByCountries") {
         get {
-          onComplete((runwayActor ? GetRunwayTypesByCountries()).mapTo[List[CountryRunwayTypes]]) {
-            case Success(airports) => complete(HttpEntity(ContentTypes.`application/json`, write(airports)))
+          onComplete((runwayActor ? GetRunwayTypesByCountries()).mapTo[Vector[String]]) {
+            case Success(result) => complete(HttpEntity(ContentTypes.`application/json`, s"[${result.mkString(",")}]"))
             case Failure(ex) => complete(StatusCodes.InternalServerError, s"""{error: "${ex.getMessage}"}""")
           }
         }
       } ~
       path("runwayIdentifications") {
         get {
-          onComplete((runwayActor ? GetRunwayIdentifications()).mapTo[List[RunwayIdentifications]]) {
-            case Success(airports) => complete(HttpEntity(ContentTypes.`application/json`, write(airports)))
+          onComplete((runwayActor ? GetRunwayIdentifications()).mapTo[Vector[String]]) {
+            case Success(result) => complete(HttpEntity(ContentTypes.`application/json`, s"[${result.mkString(",")}]"))
             case Failure(ex) => complete(StatusCodes.InternalServerError, s"""{error: "${ex.getMessage}"}""")
           }
         }
@@ -41,8 +41,8 @@ object RunwayRoutes {
     } ~
     path(Segment / "runways") { airportIdentifier =>
       get {
-        onComplete((runwayActor ? GetRunwaysByAirport(airportIdentifier)).mapTo[List[Runway]]) {
-          case Success(runways) => complete(HttpEntity(ContentTypes.`application/json`, write(runways)))
+        onComplete((runwayActor ? GetRunwaysByAirport(airportIdentifier)).mapTo[Vector[String]]) {
+          case Success(result) => complete(HttpEntity(ContentTypes.`application/json`, s"[${result.mkString(",")}]"))
           case Failure(ex) => complete(StatusCodes.InternalServerError, s"""{error: "${ex.getMessage}"}""")
         }
       }

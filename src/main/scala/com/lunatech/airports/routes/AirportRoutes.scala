@@ -23,16 +23,16 @@ object AirportRoutes {
   val routes: Route =
     path("airports" / "reports" / "byCountries") {
       get {
-        onComplete((airportActor ? GetAirportsByCountries()).mapTo[CountryAirportSummary]) {
-          case Success(airports) => complete(HttpEntity(ContentTypes.`application/json`, write(airports)))
+        onComplete((airportActor ? GetAirportsByCountries()).mapTo[String]) {
+          case Success(result) => complete(HttpEntity(ContentTypes.`application/json`, result))
           case Failure(ex) => complete(StatusCodes.InternalServerError, s"""{error: "${ex.getMessage}"}""")
         }
       }
     } ~
     path(Segment / "airports") { countryCode =>
       get {
-        onComplete((airportActor ? GetAirportsByCountry(countryCode)).mapTo[List[Airport]]) {
-          case Success(airports) => complete(HttpEntity(ContentTypes.`application/json`, write(airports)))
+        onComplete((airportActor ? GetAirportsByCountry(countryCode)).mapTo[Vector[String]]) {
+          case Success(result) => complete(HttpEntity(ContentTypes.`application/json`, s"[${result.mkString(",")}]"))
           case Failure(ex) => complete(StatusCodes.InternalServerError, s"""{error: "${ex.getMessage}"}""")
         }
       }

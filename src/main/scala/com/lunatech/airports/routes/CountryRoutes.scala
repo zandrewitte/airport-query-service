@@ -27,12 +27,12 @@ object CountryRoutes {
     path("country") {
       get {
         parameter('query) { query =>
-          onComplete((countryActor ? GetCountryByQuery(query)).mapTo[Option[Country]]) {
+          onComplete((countryActor ? GetCountryByQuery(query)).mapTo[Option[String]]) {
             case Success(countryOpt) =>
               countryOpt.fold(
                 complete(StatusCodes.NoContent)
               )(country =>
-                complete(HttpEntity(ContentTypes.`application/json`, write(country)))
+                complete(HttpEntity(ContentTypes.`application/json`, country))
               )
             case Failure(ex) => complete(StatusCodes.InternalServerError, s"""{error: "${ex.getMessage}"}""")
           }
