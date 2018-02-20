@@ -1,9 +1,9 @@
-package com.lunatech.airports.actors
+package com.zantech.airports.actors
 
 import akka.actor.{Actor, ActorLogging}
-import com.lunatech.airports.messagespec._
-import com.lunatech.airports.messagespec.Implicits._
-import com.lunatech.airports.IngestStreams._
+import com.zantech.airports.messagespec._
+import com.zantech.airports.messagespec.Implicits._
+import com.zantech.airports.IngestStreams._
 import org.apache.spark.sql.functions._
 /**
   * Created by zandrewitte on 2017/07/12.

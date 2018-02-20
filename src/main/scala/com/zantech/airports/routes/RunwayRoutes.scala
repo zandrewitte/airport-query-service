@@ -1,4 +1,4 @@
-package com.lunatech.airports.routes
+package com.zantech.airports.routes
 
 import akka.actor.{ActorRef, Props}
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
@@ -7,8 +7,8 @@ import akka.http.scaladsl.server.Route
 import akka.pattern.ask
 import akka.routing.FromConfig
 import org.json4s.native.Serialization.{read, write}
-import com.lunatech.airports.actors.RunwayActor
-import com.lunatech.airports.messagespec._
+import com.zantech.airports.actors.RunwayActor
+import com.zantech.airports.messagespec._
 
 import scala.util.{Failure, Success}
 /**
@@ -16,7 +16,7 @@ import scala.util.{Failure, Success}
   * RunwayRoutes
   */
 object RunwayRoutes {
-  import com.lunatech.airports.messagespec.Implicits._
+  import com.zantech.airports.messagespec.Implicits._
 
   val runwayActor: ActorRef = system.actorOf(FromConfig.props(Props[RunwayActor]), "runwayActor")
 

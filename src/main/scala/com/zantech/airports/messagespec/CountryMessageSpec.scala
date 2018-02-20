@@ -1,4 +1,4 @@
-package com.lunatech.airports.messagespec
+package com.zantech.airports.messagespec
 
 /**
   * Created by zandrewitte on 2017/07/12.

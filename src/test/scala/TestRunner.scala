@@ -3,9 +3,9 @@ import akka.pattern.ask
 import akka.routing.FromConfig
 import akka.testkit.{ImplicitSender, TestActorRef, TestActors, TestKit, TestProbe}
 import org.scalatest._
-import com.lunatech.airports.actors.{AirportActor, CountryActor, RunwayActor}
-import com.lunatech.airports.messagespec._
-import com.lunatech.airports.messagespec.Implicits.{system, _}
+import com.zantech.airports.actors.{AirportActor, CountryActor, RunwayActor}
+import com.zantech.airports.messagespec._
+import com.zantech.airports.messagespec.Implicits.{system, _}
 
 /**
   * Created by zandrewitte on 2017/07/14.

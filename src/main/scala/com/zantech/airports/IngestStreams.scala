@@ -1,9 +1,9 @@
-package com.lunatech.airports
+package com.zantech.airports
 
 import java.nio.file.Paths
 
-import com.lunatech.airports.messagespec.Implicits.spark
-import com.lunatech.airports.messagespec.{Namespace, TableName}
+import com.zantech.airports.messagespec.Implicits.spark
+import com.zantech.airports.messagespec.{Namespace, TableName}
 import org.apache.spark.sql.DataFrame
 
 object IngestStreams {

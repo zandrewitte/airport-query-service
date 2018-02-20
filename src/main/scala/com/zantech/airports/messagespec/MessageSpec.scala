@@ -1,4 +1,4 @@
-package com.lunatech.airports.messagespec
+package com.zantech.airports.messagespec
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer

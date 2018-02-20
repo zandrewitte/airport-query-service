@@ -1,9 +1,9 @@
-package com.lunatech.airports.actors
+package com.zantech.airports.actors
 
 import akka.actor.{Actor, ActorLogging}
-import com.lunatech.airports.messagespec.{GetCountryByQuery, TableName}
-import com.lunatech.airports.messagespec.Implicits._
-import com.lunatech.airports.IngestStreams._
+import com.zantech.airports.messagespec.{GetCountryByQuery, TableName}
+import com.zantech.airports.messagespec.Implicits._
+import com.zantech.airports.IngestStreams._
 import scala.language.postfixOps
 import org.apache.spark.sql.functions._
 
